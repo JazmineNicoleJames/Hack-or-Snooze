@@ -1,7 +1,6 @@
 "use strict";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
-//const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkphekphbWVzIiwiaWF0IjoxNjg1NzUxNTg3fQ.uvhgQSvP8QbMTDJOlAejBtB6W74qP3zH8draYwPDu3k";
 
 /******************************************************************************
  * Story: a single story in the system
@@ -110,13 +109,6 @@ class StoryList {
   }
 }
 
-
-
-
-
-
-
-
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
  */
@@ -127,7 +119,6 @@ class User {
    *   - token
    */
 
-
   constructor({
                 username,
                 name,
@@ -135,22 +126,17 @@ class User {
                 favorites = [],
                 ownStories = []
               },
-              token) {
+              token) 
+              {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
-
     // instantiate Story instances for the user's favorites and ownStories
     this.favorites = favorites.map(s => new Story(s));
     this.ownStories = ownStories.map(s => new Story(s));
-
-    
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
   }
-
-
-
   /** Register new user in API, make User instance & return it.
    *
    * - username: a new username
@@ -164,20 +150,25 @@ class User {
       method: "POST",
       data: { user: { username, password, name } },
     });
+    console.log(response)
 
-    let { user } = response.data
+    let {user} = response.data;
+    let token = response.data.token;
+   
 
     return new User(
       {
         username: user.username,
         name: user.name,
+        password: user.password,
         createdAt: user.createdAt,
         favorites: user.favorites,
         ownStories: user.stories
       },
-      response.data.token
+      token
     );
   }
+
 
   /** Login in user with API, make User instance & return it.
 
@@ -255,7 +246,6 @@ async removeFavorite(story){
     let token = this.loginToken;
     await axios({
       url: `${BASE_URL}/users/${username}/favorites/${story.storyId}`,
-   //   method: "add" ? "POST" : "DELETE",
       method: newMethod,
    params: { token }
   });

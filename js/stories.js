@@ -8,7 +8,6 @@ let storyList;
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
-
   putStoriesOnPage();
 }
 
@@ -20,11 +19,12 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
- console.debug("generateStoryMarkup");
-  const showFavorite = Boolean(currentUser)
+  console.debug("generateStoryMarkup");
+  $navMainLinks.show();
+  const showFavorite = Boolean(currentUser);
   const hostName = story.getHostName();
+
   return $(`
-  
       <li id="${story.storyId}">
       <div id="divId">
       ${showFavorite ? addFavoriteStar(story, currentUser) : ""} 
@@ -48,7 +48,6 @@ function generateStoryMarkup(story) {
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
-
   $allStoriesList.empty();
 
   // loop through all of our stories and generate HTML for them
@@ -56,27 +55,28 @@ function putStoriesOnPage() {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-
   $allStoriesList.show();
+
 }
+
 
 function putFavoritesListOnPage(){
 
   $favoriteStories.empty();
-  console.log(currentUser.favorites.length)
+  console.log(currentUser.favorites.length);
+
   for(let story of currentUser.favorites){
     const $story = generateStoryMarkup(story);
-    $favoriteStories.append($story)
+    $favoriteStories.append($story);
     console.log(story)
   }
   
 }
 
- function addFavoriteStar(story, user){
- const isFavorite = user.isFavorite(story);
- const star = isFavorite ? "fas" : "far";
- return ` <span class='star'><i class='${star} fa-star'></i></span>`
-
+function addFavoriteStar(story, user){
+  const isFavorite = user.isFavorite(story);
+  const star = isFavorite ? "fas" : "far";
+  return ` <span class='star'><i class='${star} fa-star'></i></span>`
 } 
 
 
@@ -88,9 +88,9 @@ async function submitNewStory(e){
   const url = $("#urlInput").val();
   const username = currentUser.username;
   const newStoryData = { title, author, url, username };
-  console.log(newStoryData)
+  console.log(newStoryData);
 
-  let story = await storyList.addStory(currentUser, newStoryData)
+  let story = await storyList.addStory(currentUser, newStoryData);
   const $story = generateStoryMarkup(story);
   $allStoriesList.childElement.append($story);
 
@@ -100,46 +100,47 @@ async function submitNewStory(e){
 
 
 function showUsersStories() {
-  console.debug('showUsersStories')
-  //$ownStories.empty()
+  console.debug("showUsersStories")
+
 
   if(currentUser.ownStories.length === 0){
-    console.log('HIIII')
-    $('ownStories').append(`<p> No stories yet!</p>`)
+    $("#ownStories").append(`<p> No stories yet!</p>`)
   }
   else {
     console.log('WE HAVE STORIES')
     for(let story of currentUser.ownStories){
       let $story = generateStoryMarkup(story)
-    $('#ownStories').append($story)
+      $("#ownStories").append($story)
+    }
   }
-}
-  $('#ownStories').show()
+
+  $("#ownStories").show()
+  $allStoriesList.empty();
 }
 
 
 function showFavorites(){
-  console.debug('showFavorites');
-
+  console.debug("showFavorites");
+  let $faves;
   if(currentUser.favorites.length === 0){
-    $('#favoriteStories').append(`<p> No favorites added yet! </p>`)
+    $("#favoriteStories").append(`<p> No favorites added yet! </p>`)
   }
   else{
     for(let fav of currentUser.favorites){
-      let $faves = generateStoryMarkup(fav);
-      $('#favoriteStories').append($faves)
+      $faves = generateStoryMarkup(fav);
+      $("#favoriteStories").append($faves)
     }
   }
-  $('#favoriteStories').show()
+  $("#favoriteStories").show()
 }
 
 
 async function deleteStory(e){
   let $target = $(e.target)
-  let li = $target.closest('li');
-  let storyId = li.attr('id')
+  let li = $target.closest("li");
+  let storyId = li.attr("id")
   console.log(storyId)
-  $target.closest('li').remove()
+  $target.closest("li").remove()
   await storyList.removeStory(currentUser, storyId);
 }
 
@@ -147,14 +148,14 @@ async function deleteStory(e){
 async function addOrRemoveFavorite(e){
   console.debug("addOrRemoveFavorite")
   const target = $(e.target);
-  const li = target.closest('li');
-  const storyId = li.attr('id');
+  const li = target.closest("li");
+  const storyId = li.attr("id");
   console.log(storyId)
   const story = storyList.stories.find(s => s.storyId === storyId);
   console.log(story)
 
   if(target.hasClass("far")){
-    console.log(target.closest('li'));
+    console.log(target.closest("li"));
     await currentUser.addFavorite(story)
     target.toggleClass("fas")
     console.log("YEP")
@@ -166,7 +167,7 @@ async function addOrRemoveFavorite(e){
   }
 }
 
-$('#addNewStory').on('submit',submitNewStory)
-$allStoriesList.on('click', '.star', addOrRemoveFavorite)
-$allStoriesList.on('click', '.deleteButton', deleteStory)
+$("#addNewStory").on("submit",submitNewStory)
+$allStoriesList.on("click", ".star", addOrRemoveFavorite)
+$allStoriesList.on("click", ".deleteButton", deleteStory)
 

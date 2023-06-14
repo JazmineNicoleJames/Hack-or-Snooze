@@ -6,6 +6,8 @@
 
 /** Show main list of all stories when click site name */
 
+
+
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
@@ -25,6 +27,7 @@ function navLoginClick(evt) {
 
 $navLogin.on("click", navLoginClick);
 
+
 /** When a user first logins in, update the navbar to reflect that. */
 
 function updateNavOnLogin() {
@@ -39,6 +42,7 @@ function navAddStory(evt){
   console.debug("navAddStory", evt);
   $("#addNewStory").show();
 }
+
 $("#addStorySubmit").on("click", navAddStory);
 
 
@@ -48,11 +52,12 @@ function navMyStories(e){
   showUsersStories();
   $('ownStories').show()
 }
-$('.nav-main-links').on('click', '#myStories', navMyStories)
+
+$(".nav-main-links").on("click", "#myStories", navMyStories)
 
 function navMyFavorites(e){
   hidePageComponents();
   showFavorites();
-  $('favoriteStories').show()
+  $("favoriteStories").show()
 }
-$('.nav-main-links').on('click', '#favorites', navMyFavorites)
+$(".nav-main-links").on("click", "#favorites", navMyFavorites)

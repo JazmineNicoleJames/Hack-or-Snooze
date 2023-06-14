@@ -20,13 +20,14 @@ async function login(evt) {
   // User.login retrieves user info from API and returns User instance
   // which we'll make the globally-available, logged-in user.
   currentUser = await User.login(username, password);
-
   $loginForm.trigger("reset");
 
   saveUserCredentialsInLocalStorage();
   updateUIOnUserLogin();
+  hidePageComponents();
+  $allStoriesList.show();
+  $navMainLinks.show();
 }
-
 $loginForm.on("submit", login);
 
 /** Handle signup form submission. */
@@ -38,14 +39,13 @@ async function signup(evt) {
   const name = $("#signup-name").val();
   const username = $("#signup-username").val();
   const password = $("#signup-password").val();
-
+  console.log(name, username, password)
   // User.signup retrieves user info from API and returns User instance
   // which we'll make the globally-available, logged-in user.
   currentUser = await User.signup(username, password, name);
 
   saveUserCredentialsInLocalStorage();
   updateUIOnUserLogin();
-
   $signupForm.trigger("reset");
 }
 
@@ -60,6 +60,7 @@ function logout(evt) {
   console.debug("logout", evt);
   localStorage.clear();
   location.reload();
+  hidePageComponents();
 }
 
 $navLogOut.on("click", logout);
@@ -109,8 +110,8 @@ function saveUserCredentialsInLocalStorage() {
 
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
-
+  hidePageComponents()
   $allStoriesList.show();
-
+  $(".nav-main-links").show();
   updateNavOnLogin();
 }
