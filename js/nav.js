@@ -32,9 +32,12 @@ $navLogin.on("click", navLoginClick);
 
 function updateNavOnLogin() {
   console.debug("updateNavOnLogin");
-  $(".main-nav-links").show();
+  $navMainLinks.show();
   $navLogin.hide();
   $navLogOut.show();
+  $addStorySubmit.show();
+  $('#favorites').show();
+  $('#myStories').show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
 

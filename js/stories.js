@@ -121,17 +121,19 @@ function showUsersStories() {
 
 function showFavorites(){
   console.debug("showFavorites");
+  $favorites.empty();
   let $faves;
   if(currentUser.favorites.length === 0){
-    $("#favoriteStories").append(`<p> No favorites added yet! </p>`)
+    $favorites.append(`<p> No favorites added yet! </p>`)
   }
   else{
     for(let fav of currentUser.favorites){
       $faves = generateStoryMarkup(fav);
-      $("#favoriteStories").append($faves)
+      $favorites.append($faves)
     }
   }
-  $("#favoriteStories").show()
+
+  $favorites.show()
 }
 
 
